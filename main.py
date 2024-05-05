@@ -4,7 +4,7 @@ import pandas as pd
 import re
 from bs4 import BeautifulSoup
 
-API_KEY = '77296fa9-b690-43bb-9e27-9535b854db20'
+API_KEY = ''
 API_HOST = 'https://apidata.mos.ru/'
 
 VELO_PARKING = 916
