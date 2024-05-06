@@ -4,7 +4,7 @@ import pandas as pd
 import re
 from bs4 import BeautifulSoup
 
-API_KEY = ''
+API_KEY = '77296fa9-b690-43bb-9e27-9535b854db20'
 API_HOST = 'https://apidata.mos.ru/'
 
 VELO_PARKING = 916
@@ -13,15 +13,15 @@ DOG_WALKING_AREA = 2663
 
 response = requests.get(API_HOST + f'v1/datasets/{str(VELO_PARKING)}/rows?api_key={API_KEY}')
 data = response.json()
-# with open('velo_parking.json', 'w', encoding='utf-8') as f:
-#     json.dump(data, f)
+with open('velo_parking.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f)
 velo_parking_arr = []
 for item in data:
     velo_parking_arr.append([
         item['Cells']['global_id'],
         item['Cells']['Name'],
         item['Cells']['AdmArea'],
-        item['Cells']['District'],
+        item['Cells']['District'].replace('район ', '').replace(' район', ''),
         item['Cells']['Address'],
         item['Cells']['Photo'],
         item['Cells']['Capacity'],
@@ -47,8 +47,7 @@ velo_parking_df = pd.DataFrame(velo_parking_arr,
                                    'Latitude',
                                ])
 velo_parking_df.to_csv('velo_parking.csv', encoding='utf-8', index=False)
-
-print('♥')
+print('Датасет \"Велосипедные парковки\" был выгружен')
 
 response = requests.get(API_HOST + f'v1/datasets/{str(SPORTS_HALL)}/rows?api_key={API_KEY}')
 data = response.json()
@@ -60,7 +59,7 @@ for item in data:
         item['Cells']['global_id'],
         item['Cells']['ObjectName'],
         item['Cells']['AdmArea'],
-        item['Cells']['District'],
+        item['Cells']['District'].replace('район ', '').replace(' район', ''),
         item['Cells']['Address'],
         item['Cells']['PhotoWinter'][0]['Photo'],
         item['Cells']['Email'],
@@ -84,8 +83,9 @@ sports_hall_df = pd.DataFrame(sports_hall_arr,
                                   'Latitude',
                               ])
 sports_hall_df.to_csv('sports_hall.csv', encoding='utf-8', index=False)
+print('Датасет \"Залы спортивные\" был выгружен')
 
-response = requests.get(API_HOST + f'v1/datasets/{str(DOG_WALKING_AREA)}/rows?api_key={API_KEY}&$top=1')
+response = requests.get(API_HOST + f'v1/datasets/{str(DOG_WALKING_AREA)}/rows?api_key={API_KEY}')
 data = response.json()
 with open('dog_walking_area.json', 'w', encoding='utf-8') as f:
     json.dump(data, f)
